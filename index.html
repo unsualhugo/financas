@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planilha Financeira</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Planilha Financeira</h1>
+        
+        <!-- Abas -->
+        <div class="abas">
+            <button class="aba-link active" onclick="abrirAba('financas')">Finanças</button>
+            <button class="aba-link" onclick="abrirAba('investimentos')">Investimentos</button>
+            <button class="aba-link" onclick="abrirAba('dividendos')">Dividendos</button>
+        </div>
+
+        <!-- Aba Finanças -->
+        <div id="financas" class="aba-conteudo active">
+            <div class="form-container">
+                <input type="text" id="descricao" placeholder="Descrição">
+                <input type="number" id="valor" placeholder="Valor">
+                <input type="date" id="dataFinancas">
+                <select id="tipo">
+                    <option value="receita">Receita</option>
+                    <option value="despesa">Despesa</option>
+                </select>
+                <button onclick="adicionarEntrada()">Adicionar</button>
+            </div>
+            <table id="tabela">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Entradas serão adicionadas aqui via JavaScript -->
+                </tbody>
+            </table>
+            <div class="saldo-container">
+                <h2>Saldo Total: <span id="saldoTotal">R$ 0.00</span></h2>
+            </div>
+        </div>
+
+        <!-- Aba Investimentos -->
+        <div id="investimentos" class="aba-conteudo">
+            <div class="form-container">
+                <input type="text" id="nomeInvestimento" placeholder="Nome do Investimento">
+                <input type="number" id="valorInvestimento" placeholder="Valor Investido">
+                <input type="date" id="dataInvestimento">
+                <select id="tipoInvestimento">
+                    <option value="FIIS">FIIS</option>
+                    <option value="Acoes">Ações</option>
+                    <option value="CDB">CDB</option>
+                    <option value="ETFs">ETFs</option>
+                    <option value="Cripto">Cripto Moeda</option>
+                </select>
+                <button onclick="adicionarInvestimento()">Adicionar</button>
+            </div>
+            <table id="tabelaInvestimentos">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Valor Investido</th>
+                        <th>Data</th>
+                        <th>Tipo de Investimento</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Investimentos serão adicionados aqui via JavaScript -->
+                </tbody>
+            </table>
+            <div class="saldo-container">
+                <h2>Total Investido: <span id="totalInvestido">R$ 0.00</span></h2>
+            </div>
+        </div>
+
+        <!-- Aba Dividendos -->
+        <div id="dividendos" class="aba-conteudo">
+            <div class="form-container">
+                <input type="text" id="nomeDividendo" placeholder="Nome do Ativo (FII/Ação)">
+                <input type="number" id="valorDividendo" placeholder="Valor do Dividendo">
+                <input type="date" id="dataDividendo">
+                <button onclick="adicionarDividendo()">Adicionar</button>
+            </div>
+            <table id="tabelaDividendos">
+                <thead>
+                    <tr>
+                        <th>Nome do Ativo</th>
+                        <th>Valor do Dividendo</th>
+                        <th>Data</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dividendos serão adicionados aqui via JavaScript -->
+                </tbody>
+            </table>
+            <div class="saldo-container">
+                <h2>Total de Dividendos: <span id="totalDividendos">R$ 0.00</span></h2>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
