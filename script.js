@@ -2,17 +2,87 @@ let saldoTotal = 0;
 let totalInvestido = 0;
 let totalDividendos = 0;
 
+// Função para salvar dados no localStorage
+function salvarDados() {
+    const dados = {
+        saldoTotal,
+        totalInvestido,
+        totalDividendos,
+        entradas: Array.from(document.querySelectorAll('#tabela tbody tr')).map(linha => ({
+            descricao: linha.cells[0].textContent,
+            valor: parseFloat(linha.cells[1].textContent.replace('R$ ', '')),
+            data: linha.cells[2].textContent,
+            tipo: linha.cells[3].textContent
+        })),
+        investimentos: Array.from(document.querySelectorAll('#tabelaInvestimentos tbody tr')).map(linha => ({
+            nome: linha.cells[0].textContent,
+            valor: parseFloat(linha.cells[1].textContent.replace('R$ ', '')),
+            data: linha.cells[2].textContent,
+            tipo: linha.cells[3].textContent
+        })),
+        dividendos: Array.from(document.querySelectorAll('#tabelaDividendos tbody tr')).map(linha => ({
+            nome: linha.cells[0].textContent,
+            valor: parseFloat(linha.cells[1].textContent.replace('R$ ', '')),
+            data: linha.cells[2].textContent
+        }))
+    };
+
+    localStorage.setItem('planilhaFinanceira', JSON.stringify(dados));
+}
+
+// Função para carregar dados do localStorage
+function carregarDados() {
+    const dadosSalvos = localStorage.getItem('planilhaFinanceira');
+    if (dadosSalvos) {
+        const dados = JSON.parse(dadosSalvos);
+
+        // Restaurar totais
+        saldoTotal = dados.saldoTotal || 0;
+        totalInvestido = dados.totalInvestido || 0;
+        totalDividendos = dados.totalDividendos || 0;
+
+        document.getElementById('saldoTotal').textContent = `R$ ${saldoTotal.toFixed(2)}`;
+        document.getElementById('totalInvestido').textContent = `R$ ${totalInvestido.toFixed(2)}`;
+        document.getElementById('totalDividendos').textContent = `R$ ${totalDividendos.toFixed(2)}`;
+
+        // Restaurar entradas financeiras
+        dados.entradas.forEach(entrada => {
+            const newRow = document.getElementById('tabela').getElementsByTagName('tbody')[0].insertRow();
+            newRow.insertCell(0).textContent = entrada.descricao;
+            newRow.insertCell(1).textContent = `R$ ${entrada.valor.toFixed(2)}`;
+            newRow.insertCell(2).textContent = entrada.data;
+            newRow.insertCell(3).textContent = entrada.tipo;
+            newRow.insertCell(4).innerHTML = `<button onclick="removerLinha(this, ${entrada.valor}, '${entrada.tipo}')">Remover</button>`;
+        });
+
+        // Restaurar investimentos
+        dados.investimentos.forEach(investimento => {
+            const newRow = document.getElementById('tabelaInvestimentos').getElementsByTagName('tbody')[0].insertRow();
+            newRow.insertCell(0).textContent = investimento.nome;
+            newRow.insertCell(1).textContent = `R$ ${investimento.valor.toFixed(2)}`;
+            newRow.insertCell(2).textContent = investimento.data;
+            newRow.insertCell(3).textContent = investimento.tipo;
+            newRow.insertCell(4).innerHTML = `<button onclick="removerLinha(this, ${investimento.valor}, 'investimento')">Remover</button>`;
+        });
+
+        // Restaurar dividendos
+        dados.dividendos.forEach(dividendo => {
+            const newRow = document.getElementById('tabelaDividendos').getElementsByTagName('tbody')[0].insertRow();
+            newRow.insertCell(0).textContent = dividendo.nome;
+            newRow.insertCell(1).textContent = `R$ ${dividendo.valor.toFixed(2)}`;
+            newRow.insertCell(2).textContent = dividendo.data;
+            newRow.insertCell(3).innerHTML = `<button onclick="removerLinha(this, ${dividendo.valor}, 'dividendo')">Remover</button>`;
+        });
+    }
+}
+
 // Função para alternar entre abas
 function abrirAba(aba) {
-    // Esconde todas as abas
     document.querySelectorAll('.aba-conteudo').forEach(function (conteudo) {
         conteudo.classList.remove('active');
     });
-
-    // Mostra a aba selecionada
     document.getElementById(aba).classList.add('active');
 
-    // Atualiza o estado dos botões
     document.querySelectorAll('.aba-link').forEach(function (link) {
         link.classList.remove('active');
     });
@@ -49,6 +119,7 @@ function adicionarEntrada() {
         }
 
         document.getElementById('saldoTotal').textContent = `R$ ${saldoTotal.toFixed(2)}`;
+        salvarDados();
 
         // Limpar campos de entrada
         document.getElementById('descricao').value = '';
@@ -84,6 +155,7 @@ function adicionarInvestimento() {
 
         totalInvestido += valor;
         document.getElementById('totalInvestido').textContent = `R$ ${totalInvestido.toFixed(2)}`;
+        salvarDados();
 
         // Limpar campos de entrada
         document.getElementById('nomeInvestimento').value = '';
@@ -116,6 +188,7 @@ function adicionarDividendo() {
 
         totalDividendos += valor;
         document.getElementById('totalDividendos').textContent = `R$ ${totalDividendos.toFixed(2)}`;
+        salvarDados();
 
         // Limpar campos de entrada
         document.getElementById('nomeDividendo').value = '';
@@ -145,4 +218,9 @@ function removerLinha(botao, valor, tipo) {
         totalDividendos -= valor;
         document.getElementById('totalDividendos').textContent = `R$ ${totalDividendos.toFixed(2)}`;
     }
+
+    salvarDados();
 }
+
+// Carregar dados ao abrir a página
+window.onload = carregarDados;
