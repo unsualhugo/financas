@@ -51,32 +51,44 @@
         <!-- Aba Investimentos -->
         <div id="investimentos" class="aba-conteudo">
             <div class="form-container">
-                <input type="text" id="nomeInvestimento" placeholder="Nome do Investimento">
-                <input type="number" id="valorInvestimento" placeholder="Valor Investido">
-                <input type="date" id="dataInvestimento">
-                <select id="tipoInvestimento">
-                    <option value="FIIS">FIIS</option>
-                    <option value="Acoes">Ações</option>
-                    <option value="CDB">CDB</option>
-                    <option value="ETFs">ETFs</option>
-                    <option value="Cripto">Cripto Moeda</option>
-                </select>
-                <button onclick="adicionarInvestimento()">Adicionar</button>
+                <button onclick="mostrarFormularioInvestimento()">Adicionar</button>
             </div>
-            <table id="tabelaInvestimentos">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Valor Investido</th>
-                        <th>Data</th>
-                        <th>Tipo de Investimento</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Investimentos serão adicionados aqui via JavaScript -->
-                </tbody>
-            </table>
+
+            <!-- Formulário de Adição (inicialmente oculto) -->
+            <div id="formularioInvestimento" class="formulario-oculto">
+                <input type="text" id="nomeInvestimento" placeholder="Nome do Investimento">
+                <input type="date" id="dataInvestimento">
+                <input type="number" id="cotasInvestimento" placeholder="Número de Cotas">
+                <input type="number" id="valorInvestimento" placeholder="Valor Investido">
+                <select id="tipoInvestimento">
+                    <option value="Acoes">Ação</option>
+                    <option value="ETFs">ETFs</option>
+                    <option value="CDB">CDB</option>
+                    <option value="FIIS">FIIS</option>
+                </select>
+                <button onclick="adicionarInvestimento()">Confirmar</button>
+                <button onclick="ocultarFormularioInvestimento()">Voltar</button>
+            </div>
+
+            <!-- Tabela de Investimentos com Barra de Rolagem -->
+            <div class="tabela-container">
+                <table id="tabelaInvestimentos">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Número de Cotas</th>
+                            <th>Valor Investido</th>
+                            <th>Data</th>
+                            <th>Tipo de Investimento</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Investimentos serão adicionados aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
             <div class="saldo-container">
                 <h2>Total Investido: <span id="totalInvestido">R$ 0.00</span></h2>
             </div>

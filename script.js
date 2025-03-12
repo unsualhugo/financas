@@ -16,9 +16,10 @@ function salvarDados() {
         })),
         investimentos: Array.from(document.querySelectorAll('#tabelaInvestimentos tbody tr')).map(linha => ({
             nome: linha.cells[0].textContent,
-            valor: parseFloat(linha.cells[1].textContent.replace('R$ ', '')),
-            data: linha.cells[2].textContent,
-            tipo: linha.cells[3].textContent
+            cotas: parseFloat(linha.cells[1].textContent),
+            valor: parseFloat(linha.cells[2].textContent.replace('R$ ', '')),
+            data: linha.cells[3].textContent,
+            tipo: linha.cells[4].textContent
         })),
         dividendos: Array.from(document.querySelectorAll('#tabelaDividendos tbody tr')).map(linha => ({
             nome: linha.cells[0].textContent,
@@ -59,10 +60,11 @@ function carregarDados() {
         dados.investimentos.forEach(investimento => {
             const newRow = document.getElementById('tabelaInvestimentos').getElementsByTagName('tbody')[0].insertRow();
             newRow.insertCell(0).textContent = investimento.nome;
-            newRow.insertCell(1).textContent = `R$ ${investimento.valor.toFixed(2)}`;
-            newRow.insertCell(2).textContent = investimento.data;
-            newRow.insertCell(3).textContent = investimento.tipo;
-            newRow.insertCell(4).innerHTML = `<button onclick="removerLinha(this, ${investimento.valor}, 'investimento')">Remover</button>`;
+            newRow.insertCell(1).textContent = investimento.cotas;
+            newRow.insertCell(2).textContent = `R$ ${investimento.valor.toFixed(2)}`;
+            newRow.insertCell(3).textContent = investimento.data;
+            newRow.insertCell(4).textContent = investimento.tipo;
+            newRow.insertCell(5).innerHTML = `<button onclick="removerLinha(this, ${investimento.valor}, 'investimento')">Remover</button>`;
         });
 
         // Restaurar dividendos
@@ -87,6 +89,62 @@ function abrirAba(aba) {
         link.classList.remove('active');
     });
     document.querySelector(`[onclick="abrirAba('${aba}')"]`).classList.add('active');
+}
+
+// Função para mostrar o formulário de adição de investimento
+function mostrarFormularioInvestimento() {
+    const formulario = document.getElementById('formularioInvestimento');
+    formulario.style.display = 'block';
+}
+
+// Função para ocultar o formulário de adição de investimento
+function ocultarFormularioInvestimento() {
+    const formulario = document.getElementById('formularioInvestimento');
+    formulario.style.display = 'none';
+}
+
+// Função para adicionar investimentos
+function adicionarInvestimento() {
+    const nome = document.getElementById('nomeInvestimento').value;
+    const cotas = parseFloat(document.getElementById('cotasInvestimento').value);
+    const valor = parseFloat(document.getElementById('valorInvestimento').value);
+    const data = document.getElementById('dataInvestimento').value;
+    const tipo = document.getElementById('tipoInvestimento').value;
+
+    if (nome && !isNaN(cotas) && !isNaN(valor) && data && tipo) {
+        const tabela = document.getElementById('tabelaInvestimentos').getElementsByTagName('tbody')[0];
+        const newRow = tabela.insertRow();
+
+        const cellNome = newRow.insertCell(0);
+        const cellCotas = newRow.insertCell(1);
+        const cellValor = newRow.insertCell(2);
+        const cellData = newRow.insertCell(3);
+        const cellTipo = newRow.insertCell(4);
+        const cellAcoes = newRow.insertCell(5);
+
+        cellNome.textContent = nome;
+        cellCotas.textContent = cotas;
+        cellValor.textContent = `R$ ${valor.toFixed(2)}`;
+        cellData.textContent = data;
+        cellTipo.textContent = tipo;
+        cellAcoes.innerHTML = `<button onclick="removerLinha(this, ${valor}, 'investimento')">Remover</button>`;
+
+        totalInvestido += valor;
+        document.getElementById('totalInvestido').textContent = `R$ ${totalInvestido.toFixed(2)}`;
+
+        // Ocultar o formulário após adicionar
+        ocultarFormularioInvestimento();
+
+        // Limpar campos de entrada
+        document.getElementById('nomeInvestimento').value = '';
+        document.getElementById('cotasInvestimento').value = '';
+        document.getElementById('valorInvestimento').value = '';
+        document.getElementById('dataInvestimento').value = '';
+
+        salvarDados();
+    } else {
+        alert('Por favor, preencha todos os campos corretamente.');
+    }
 }
 
 // Função para adicionar entradas financeiras
@@ -125,42 +183,6 @@ function adicionarEntrada() {
         document.getElementById('descricao').value = '';
         document.getElementById('valor').value = '';
         document.getElementById('dataFinancas').value = '';
-    } else {
-        alert('Por favor, preencha todos os campos corretamente.');
-    }
-}
-
-// Função para adicionar investimentos
-function adicionarInvestimento() {
-    const nome = document.getElementById('nomeInvestimento').value;
-    const valor = parseFloat(document.getElementById('valorInvestimento').value);
-    const data = document.getElementById('dataInvestimento').value;
-    const tipo = document.getElementById('tipoInvestimento').value;
-
-    if (nome && !isNaN(valor) && data) {
-        const tabela = document.getElementById('tabelaInvestimentos').getElementsByTagName('tbody')[0];
-        const newRow = tabela.insertRow();
-
-        const cellNome = newRow.insertCell(0);
-        const cellValor = newRow.insertCell(1);
-        const cellData = newRow.insertCell(2);
-        const cellTipo = newRow.insertCell(3);
-        const cellAcoes = newRow.insertCell(4);
-
-        cellNome.textContent = nome;
-        cellValor.textContent = `R$ ${valor.toFixed(2)}`;
-        cellData.textContent = data;
-        cellTipo.textContent = tipo;
-        cellAcoes.innerHTML = `<button onclick="removerLinha(this, ${valor}, 'investimento')">Remover</button>`;
-
-        totalInvestido += valor;
-        document.getElementById('totalInvestido').textContent = `R$ ${totalInvestido.toFixed(2)}`;
-        salvarDados();
-
-        // Limpar campos de entrada
-        document.getElementById('nomeInvestimento').value = '';
-        document.getElementById('valorInvestimento').value = '';
-        document.getElementById('dataInvestimento').value = '';
     } else {
         alert('Por favor, preencha todos os campos corretamente.');
     }
